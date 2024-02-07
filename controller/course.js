@@ -16,6 +16,21 @@ router.get("/getAllCourses", async (request, response) => {
     }
 });
 
+router.get('/getCourse/:id',async (request ,response) => {
+    const id = request.params.id;
+    try {
+        const query = await pool.query("SELECT * FROM mykusubjecttable WHERE subject_id = ?",[id])
+        const rows = await query[0]
+        response.json(rows);
+    } catch (error) {
+        console.error(error);
+        response.json({
+            status: 'error',
+            message: error
+        })
+    }
+})
+
 router.post("/importCourse", async (request, response) => {
     const { subject_real_id, subject_thai_name ,subject_eng_name, credit ,type ,school_year } = request.body;
     try {
