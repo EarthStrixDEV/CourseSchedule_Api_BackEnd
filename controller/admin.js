@@ -4,7 +4,6 @@ const pool = require('../databases/db')
 
 router.post('/createAnnouncement', async(request ,response) => {
     const {announce_text} = request.body
-    
     try {
         const query = await pool.query("INSERT INTO mykuannouncementtable (announce_text) VALUES (?)" ,[announce_text])
         const result = await query[0]
@@ -35,7 +34,6 @@ router.get('/getAnnouncement', async(request ,response) => {
 
 router.get('/deleteAnnouncement/:announce_id', async(request ,response) => {
     const announce_text = request.params.announce_id
-    
     try {
         const query = await pool.query("DELETE FROM mykuannouncementtable WHERE announce_id = ?" ,[announce_text])
         const result = await query[0]

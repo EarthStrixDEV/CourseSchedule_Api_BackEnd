@@ -34,18 +34,18 @@ router.post('/register' ,async(request ,response) => {
     }
 })
 
-router.get('/login' ,async(request ,response) => {
-    const {email ,password} = request.body
+router.post('/login' ,async(request ,response) => {
+    const {email} = request.body
     try {
-        const query = await pool.query("SELECT email, password FROM mykuusertable WHERE email = ? , password = ?",[email ,password])
+        const query = await pool.query("SELECT * FROM mykuusertable WHERE email = ?",[email])
         if (query[0].length > 0) {
             response.json({
                 status: 'success',
                 rows: query[0]
             })
         } else {
-            response.sendStatus(404).json({
-                status: 'not found',
+            response.json({
+                status: 'not user found!',
             })
         }
     } catch (error) {
