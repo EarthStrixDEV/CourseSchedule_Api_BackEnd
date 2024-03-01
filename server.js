@@ -17,7 +17,6 @@ app.use(express.urlencoded({
     extended: false,
 }))
 app.use(cors());
-app.use(morgan('dev'))
 // use route controller
 app.use('/user' ,user)
 app.use('/course', course)
