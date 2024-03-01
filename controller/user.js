@@ -16,6 +16,21 @@ router.get('/getAllUser' ,async(request ,response) => {
     }
 })
 
+router.post('/getUser',async(request ,response) => {
+    const {email} = request.body
+    try {
+        const query = await pool.query('SELECT * FROM mykuusertable WHERE email = ?',[email])
+        const result = await query[0]
+        response.json(result)
+    } catch (error) {
+        console.error(error);
+        response.json({
+            status: 'error',
+            message: error
+        })
+    }
+})
+
 router.post('/register' ,async(request ,response) => {
     const {name ,lastname ,email ,password} = request.body
     try {
