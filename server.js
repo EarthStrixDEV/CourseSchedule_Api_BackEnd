@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const dotenv = require('dotenv').config();
+const expressSession = require('express-session');
 const app = express();
 const port = process.env.PORT;
 
@@ -15,6 +16,12 @@ const room = require('./controller/room')
 app.use(express.json());
 app.use(express.urlencoded({
     extended: false,
+}))
+app.use(expressSession({
+    secret: 'your_secret_key_here',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 86400000 }
 }))
 app.use(cors());
 // use route controller

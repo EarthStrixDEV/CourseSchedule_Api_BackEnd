@@ -84,4 +84,16 @@ router.get('/deleteUser/:id', async(request ,response) => {
     }
 })
 
+router.post('/setSystemPermissions/:state', (request ,response) => {
+    const state = request.params.state
+    request.session.systemState = state === true ? true : false
+})
+
+router.get('/getSystemPermissions', (request ,response) => {
+    let getSes = request.session.systemState === null || request.session.systemState === undefined ? false : request.session.systemState
+    response.json({
+        state: getSes
+    })
+})
+
 module.exports = router
