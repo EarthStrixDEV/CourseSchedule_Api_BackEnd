@@ -82,7 +82,12 @@ router.post("/DisableCourse/:id", async(request, response) => {
 });
 
 router.post('/editCourse/:id' ,async (request ,response) => {
-    const { subject_name, credit ,type ,school_year } = request.body;
+    const { 
+        subject_name, 
+        credit ,
+        type ,
+        school_year 
+    } = request.body;
     const subject_id = request.params.id;
     try {
         const query = await pool.query("UPDATE mykusubjecttable SET subject_name = ?, credit = ? ,type = ? ,school_year = ? WHERE subject_id = ?",[subject_id,subject_name,credit ,type,school_year])
@@ -134,10 +139,42 @@ const scheduleCourseCollisions = async(subject_id ,start_time ,end_time ,date) =
 
 // booking Course
 router.post('/BookingCourseToMain/:subject_id', async (request, response) => {
-    const {subject_id ,subject_eng_name ,start_time ,end_time ,date ,section ,major_year ,student_count} = request.body
+    const {
+        subject_id,
+        subject_nameEN,
+        subject_nameTH,
+        start_time,
+        end_time,
+        Day,
+        section,
+        major_year,
+        student_count,
+        credit,
+        type,
+        enable,
+        school_year,
+        room,
+        lecturer
+    } = request.body
     
     try {
-        const query = await pool.query('INSERT INTO mykusumtable (subject_id ,subject_eng_name ,start_time ,end_time ,date ,section ,major_year ,student_count) VALUES (? ,? ,? ,? ,? ,? ,? ,?)',[subject_id ,subject_eng_name ,start_time ,end_time ,date ,section ,major_year ,student_count])
+        const query = await pool.query('INSERT INTO `mykusumtable`(`id`, `subject_id`, `subject_nameEN`, `subject_nameTH`, `start_time`, `end_time`, `Day`, `section`, `major_year`, `student_count`, `credit`, `type`, `enable`, `school_year`, `room`, `lecturer`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',[
+            subject_id,
+            subject_nameEN,
+            subject_nameTH,
+            start_time,
+            end_time,
+            Day,
+            section,
+            major_year,
+            student_count,
+            credit,
+            type,
+            enable,
+            school_year,
+            room,
+            lecturer
+        ])
         const result = await query[0]
         if (scheduleCourseCollisions(subject_id ,start_time ,end_time ,date)) {
             response.json({

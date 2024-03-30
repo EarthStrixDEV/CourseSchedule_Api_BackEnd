@@ -2,9 +2,11 @@ const express = require('express')
 const router = express.Router()
 const pool = require('../databases/db')
 
+var Session_ = null
+
 router.get('/getAllUser' ,async(request ,response) => {
     try {
-        const query = await pool.query("SELECT * FROM mykuusertable")
+        const query = await pool.query("SELECT * FROM mykuusertable WHERE email = ?",[Session_])
         const rows = await query[0]
         response.json(rows)
     } catch (error) {
@@ -54,6 +56,8 @@ router.post('/login' ,async(request ,response) => {
     try {
         const query = await pool.query("SELECT * FROM mykuusertable WHERE email = ?",[email])
         if (query[0].length > 0) {
+            Session_ = query[0][0].email
+            console.log(Session_);
             response.json({
                 status: 'success',
                 rows: query[0]

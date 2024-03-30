@@ -2,6 +2,8 @@ const express = require('express')
 const router = express.Router()
 const pool = require('../databases/db')
 
+var Session_ = true;
+
 router.post('/createAnnouncement', async(request ,response) => {
     const {announce_text} = request.body
     try {
@@ -84,16 +86,26 @@ router.get('/deleteUser/:id', async(request ,response) => {
     }
 })
 
-router.post('/setSystemPermissions/:state', (request ,response) => {
-    const state = request.params.state
-    request.session.systemState = state === true ? true : false
+router.post('/SystemPermissions', async(request ,response) => {
+    let state = request.body.state ? 1 : 0
+    try {
+        const query = await pool.query("UPDATE system SET state_permission = ?",[state])
+    } catch (error) {
+        console.error(error);
+    }
 })
 
-router.get('/getSystemPermissions', (request ,response) => {
-    let getSes = request.session.systemState === null || request.session.systemState === undefined ? false : request.session.systemState
-    response.json({
-        state: getSes
-    })
+router.get('/getSystemPermissions', async(request ,response) => {
+    try {
+        const query = await pool.query("SELECT * FROM system")
+        const result = await query[0][0]
+        console.log(`Current Permissions : ${result.state_permission}`);
+        response.json({
+            state: result.state_permission ? true : false
+        })
+    } catch (error) {
+        console.error(error);
+    }
 })
 
 module.exports = router
